@@ -2,7 +2,6 @@ package com.example.dovah.newsapp_10;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -12,19 +11,21 @@ import java.util.List;
  */
 public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
-    /** Query URL */
+    /**
+     * Query URL
+     */
     private String mUrl;
 
     /**
      * Constructs a new {@link ArticleLoader}.
      *
      * @param context of the activity
-     * @param url to load data from
+     * @param url     to load data from
      */
 
     public ArticleLoader(Context context, String url) {
         super(context);
-        mUrl=url;
+        mUrl = url;
     }
 
     @Override

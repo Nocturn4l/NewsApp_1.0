@@ -39,7 +39,7 @@ public class Article {
         mSection = section;
         mAuthor = author;
         mDate = date;
-        mUrl= url;
+        mUrl = url;
     }
 
     /**

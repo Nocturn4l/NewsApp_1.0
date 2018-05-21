@@ -23,8 +23,11 @@ import java.util.List;
  * Helper methods related to requesting and receiving articles data from The Guardian.
  */
 public class QueryUtils {
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    private static final int SUCCESS_CODE = 200;
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -37,7 +40,7 @@ public class QueryUtils {
     /**
      * Query to The Guardian and return a list of {@link Article} objects.
      */
-    public static List<Article> fetchArticles(String requestUrl){
+    public static List<Article> fetchArticles(String requestUrl) {
         // Create URL object
         URL url = createUrl(requestUrl);
         // Perform HTTP request to the URL and receive a JSON response back
@@ -67,6 +70,7 @@ public class QueryUtils {
         }
         return url;
     }
+
     /**
      * Make an HTTP request to the given URL and return a String as the response.
      */
@@ -89,7 +93,7 @@ public class QueryUtils {
 
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
-            if (urlConnection.getResponseCode() == 200) {
+            if (urlConnection.getResponseCode() == SUCCESS_CODE) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
@@ -110,6 +114,7 @@ public class QueryUtils {
         }
         return jsonResponse;
     }
+
     /**
      * Convert the {@link InputStream} into a String which contains the
      * whole JSON response from the server.
@@ -151,7 +156,7 @@ public class QueryUtils {
 
 
             JSONObject response = baseJsonResponse.getJSONObject("response");
-            JSONArray ArticleArray=response.getJSONArray("results");
+            JSONArray ArticleArray = response.getJSONArray("results");
 
             // For each Article in the ArticleArray, create an {@link Article} object
             for (int i = 0; i < ArticleArray.length(); i++) {
@@ -171,17 +176,19 @@ public class QueryUtils {
                 // Extract the value for the key called "url"
                 String url = currentArticle.getString("webUrl");
 
-                String author="Unknown Author";
-                JSONArray currentArticleTag= currentArticle.getJSONArray("tags");
-                if (currentArticleTag.length()>0){
-                JSONObject currentTag=currentArticleTag.getJSONObject(0);if(currentTag.has("webTitle")){
-                        author= currentTag.getString("webTitle");}}
-
+                String author = "Unknown Author";
+                JSONArray currentArticleTag = currentArticle.getJSONArray("tags");
+                if (currentArticleTag.length() > 0) {
+                    JSONObject currentTag = currentArticleTag.getJSONObject(0);
+                    if (currentTag.has("webTitle")) {
+                        author = currentTag.getString("webTitle");
+                    }
+                }
 
 
                 // Create a new {@link Article} object with the magnitude, location, time,
                 // and url from the JSON response.
-                Article Article = new Article(title,section,"By "+author,date.substring(0,10),url);
+                Article Article = new Article(title, section, "By " + author, date.substring(0, 10), url);
 
                 // Add the new {@link Article} to the list of Articles.
                 Articles.add(Article);
